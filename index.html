@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تهنئة عيد ميلاد - العميد محمد ابراهيم</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- GSAP & ScrollTrigger -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <!-- Premium Arabic typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Noto+Kufi+Arabic:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-navy-dark: #070f20;
+            --bg-navy-light: #112240;
+            --gold-primary: #ffd700;
+            --neon-yellow: #faff00;
+            --gold-gradient: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+            --gift-red: #d62828;
+            --gift-red-dark: #9e1d1d;
+            --ribbon-gold: #f4a261;
+        }
+
+        body {
+            font-family: 'Noto Kufi Arabic', sans-serif;
+            background: linear-gradient(135deg, var(--bg-navy-dark), var(--bg-navy-light));
+            color: white;
+            overflow-x: hidden;
+            min-height: 100vh;
+            margin: 0;
+            font-weight: 500;
+            font-optical-sizing: auto;
+            text-rendering: optimizeLegibility;
+            /* Ensures no weird scrollbars appear during animations */
+        }
+
+        /* Clean typography fixes - No blurry shadows */
+        .text-clear-shadow {
+            text-shadow: 0 4px 6px rgba(0, 0, 0, 0.6);
+            line-height: 1.6;
+        }
+
+        .golden-text {
+            font-family: 'Aref Ruqaa', serif;
+            font-weight: 700;
+            line-height: 1.35;
+            color: var(--neon-yellow);
+            -webkit-text-fill-color: var(--neon-yellow);
+            -webkit-text-stroke: 0.35px #ffffb8;
+            text-shadow:
+                0 0 2px #ffffff,
+                0 0 8px #fff700,
+                0 0 18px rgba(250, 255, 0, 0.9),
+                0 4px 8px rgba(0, 0, 0, 0.65);
+            font-weight: 800;
+            letter-spacing: 0;
+        }
+
+        /* Gift Box Wrapper */
+        .gift-scene {
+            perspective: 1000px;
+            margin: 0 auto;
+            width: 200px;
+            height: 250px;
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        .gift-container {
+            position: relative;
+            cursor: pointer;
+            width: 160px;
+            height: 140px;
+            /* Bouncing animation before click */
+            animation: bounceGift 2s infinite ease-in-out;
+            transform-style: preserve-3d;
+        }
+
+        .gift-container:hover {
+            animation-play-state: paused;
+            transform: scale(1.05);
+            transition: transform 0.3s ease;
+        }
+
+        /* Base of the box */
+        .gift-base {
+            position: absolute;
+            bottom: 0;
+            width: 160px;
+            height: 130px;
+            background-color: var(--gift-red);
+            border-radius: 8px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6), inset 0 -10px 20px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        /* Ribbon on base */
+        .gift-base::after {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 100%;
+            background: linear-gradient(to right, #e29547, var(--ribbon-gold), #e29547);
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+        }
+
+        /* The Lid - Placed EXACTLY on top */
+        .gift-lid-wrapper {
+            position: absolute;
+            top: -15px; /* Sits flush over the base */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 176px; /* Slightly wider than base */
+            height: 45px;
+            z-index: 10;
+            transform-style: preserve-3d;
+        }
+
+        .gift-lid {
+            width: 100%;
+            height: 100%;
+            background-color: var(--gift-red-dark);
+            border-radius: 6px;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.4);
+            position: relative;
+        }
+
+        /* Ribbon on lid */
+        .gift-lid::after {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 100%;
+            background: linear-gradient(to right, #e29547, var(--ribbon-gold), #e29547);
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* The Bow */
+        .gift-bow {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 70px;
+            height: 35px;
+            z-index: 11;
+        }
+        
+        .gift-bow::before, .gift-bow::after {
+            content: '';
+            position: absolute;
+            width: 45px;
+            height: 35px;
+            border: 8px solid var(--ribbon-gold);
+            border-radius: 50%;
+            top: 0;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .gift-bow::before { left: -15px; transform: rotate(-25deg); }
+        .gift-bow::after { right: -15px; transform: rotate(25deg); }
+
+        @keyframes bounceGift {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
+        }
+
+        .pulse-badge {
+            animation: pulse-glow 1.5s infinite;
+        }
+
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(255, 215, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0); }
+        }
+
+        /* Balloons */
+        .balloon {
+            position: absolute;
+            bottom: -150px;
+            width: 45px;
+            height: 60px;
+            border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+            animation: floatUp infinite linear;
+            z-index: 0;
+            opacity: 0.85;
+        }
+        
+        .balloon::before {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-bottom: 10px solid inherit;
+        }
+
+        .balloon::after {
+            content: '';
+            position: absolute;
+            bottom: -50px;
+            left: 50%;
+            width: 1px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(-120vh) rotate(15deg); }
+        }
+
+        /* Zigzag Gallery Elements */
+        .gallery-item {
+            visibility: hidden; /* Hidden until ScrollTrigger activates */
+        }
+        
+        .gallery-image-wrapper {
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .gallery-image-wrapper:hover {
+            transform: scale(1.02);
+            border-color: rgba(255, 215, 0, 0.8);
+        }
+        
+        /* Footer Gradient */
+        .footer-gradient {
+            background: linear-gradient(to top, var(--bg-navy-dark) 0%, transparent 100%);
+        }
+    </style>
+</head>
+<body id="body-container" class="overflow-hidden">
+
+    <!-- INTRO SCREEN (The Surprise Box) -->
+    <div id="intro-screen" class="fixed inset-0 flex flex-col items-center justify-center z-50 bg-gradient-to-br from-blue-900 to-black">
+        <div class="text-center z-10 w-full px-4">
+            
+            <h2 id="intro-title" class="text-3xl md:text-5xl font-black mb-16 golden-text text-clear-shadow">
+                لدينا مفاجأة استثنائية لك...
+            </h2>
+            
+            <!-- 3D Gift Scene -->
+            <div class="gift-scene">
+                <div class="gift-container" id="gift" onclick="openGift()">
+                    <!-- Box Base -->
+                    <div class="gift-base"></div>
+                    
+                    <!-- Box Lid (Positioned perfectly on top) -->
+                    <div class="gift-lid-wrapper" id="gift-lid-group">
+                        <div class="gift-bow"></div>
+                        <div class="gift-lid"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <button onclick="openGift()" class="mt-16 bg-yellow-500 hover:bg-yellow-400 text-gray-900 font-bold py-3 px-8 rounded-full text-xl pulse-badge transition-colors shadow-lg">
+                افتح الهدية
+            </button>
+        </div>
+        
+        <!-- Decorative subtle particles for intro -->
+        <div class="absolute inset-0 opacity-20 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-yellow-100 via-transparent to-transparent pointer-events-none"></div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main-content" class="hidden relative w-full min-h-screen pt-12 md:pt-24 pb-10">
+        
+        <!-- Background Balloons Container -->
+        <div id="balloons-container" class="fixed inset-0 pointer-events-none z-0"></div>
+
+        <!-- Header Section -->
+        <div class="container mx-auto px-4 relative z-10 text-center mb-24" id="greeting-header">
+            <p class="text-2xl md:text-3xl text-yellow-300 mb-6 font-bold tracking-wider text-clear-shadow">
+                كل عام وأنت بألف خير
+            </p>
+            <h1 class="text-4xl md:text-6xl lg:text-7xl font-black mb-8 leading-tight">
+                <span class="golden-text block pb-2">يا سيادة العميد</span>
+                <span class="golden-text text-5xl md:text-7xl lg:text-8xl block mt-2">محمد ابراهيم</span>
+            </h1>
+            <p class="text-lg md:text-2xl text-gray-200 max-w-3xl mx-auto leading-loose font-bold text-clear-shadow bg-black/30 p-6 rounded-2xl backdrop-blur-sm border border-white/10">
+                نتمنى لك عاماً مليئاً بالصحة والنجاح والتوفيق الدائم.<br>شخصية قيادية نعتز ونفخر بها دائماً!
+            </p>
+        </div>
+
+        <!-- Gallery Section (Zigzag Layout) -->
+        <section id="gallery-section" class="relative z-10 container mx-auto px-4 mt-20">
+            <div class="flex items-center justify-center mb-16">
+                <div class="h-1 bg-gradient-to-r from-transparent via-yellow-400 to-transparent flex-1 rounded"></div>
+                <h2 class="text-3xl md:text-5xl font-black mx-6 golden-text text-clear-shadow">ذكريات لا تُنسى</h2>
+                <div class="h-1 bg-gradient-to-r from-transparent via-yellow-400 to-transparent flex-1 rounded"></div>
+            </div>
+
+            <!-- Zigzag Grid -->
+            <div class="flex flex-col gap-12 md:gap-24 pb-20">
+                
+                <!-- Image 1: Right aligned (RTL) -->
+                <div class="gallery-item w-full md:w-2/3 self-start">
+                    <div class="gallery-image-wrapper bg-gray-800 p-2 transform rotate-1 hover:rotate-0">
+                        <img src="https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=800&q=80" alt="ذكرى 1" class="w-full h-64 md:h-96 object-cover rounded-xl">
+                    </div>
+                </div>
+
+                <!-- Image 2: Left aligned (RTL) -->
+                <div class="gallery-item w-full md:w-2/3 self-end">
+                    <div class="gallery-image-wrapper bg-gray-800 p-2 transform -rotate-1 hover:rotate-0">
+                        <img src="https://images.unsplash.com/photo-1530103862676-de8892795cfa?auto=format&fit=crop&w=800&q=80" alt="ذكرى 2" class="w-full h-64 md:h-96 object-cover rounded-xl">
+                    </div>
+                </div>
+
+                <!-- Image 3: Right aligned (RTL) -->
+                <div class="gallery-item w-full md:w-2/3 self-start">
+                    <div class="gallery-image-wrapper bg-gray-800 p-2 transform rotate-2 hover:rotate-0">
+                        <img src="https://images.unsplash.com/photo-1464349153735-7db50ed83c84?auto=format&fit=crop&w=800&q=80" alt="ذكرى 3" class="w-full h-64 md:h-96 object-cover rounded-xl">
+                    </div>
+                </div>
+
+                <!-- Image 4: Left aligned (RTL) -->
+                <div class="gallery-item w-full md:w-2/3 self-end">
+                    <div class="gallery-image-wrapper bg-gray-800 p-2 transform -rotate-2 hover:rotate-0 text-center flex items-center justify-center h-64 md:h-96">
+                        <p class="text-2xl md:text-3xl text-yellow-400 font-bold p-6">
+                            مساحة لإضافة المزيد من الصور الرائعة لاحقاً... 📸
+                        </p>
+                    </div>
+                </div>
+                
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="relative z-10 w-full mt-10 pt-16 pb-8 footer-gradient">
+            <div class="text-center">
+                <p class="text-gray-400 text-lg mb-2">صُنع بكل حب وتقدير بمناسبة هذا اليوم السعيد 🎉</p>
+                <div class="inline-block mt-4 px-6 py-2 border border-yellow-500/30 rounded-full bg-black/40 backdrop-blur-sm">
+                    <p class="text-yellow-400 font-bold text-xl tracking-wide">
+                        تم تطوير الموقع بواسطة ابنك : يوســـــف
+                    </p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        let isOpened = false;
+        
+        // Register GSAP ScrollTrigger
+        gsap.registerPlugin(ScrollTrigger);
+
+        function openGift() {
+            if (isOpened) return;
+            isOpened = true;
+
+            // Stop box bouncing
+            document.getElementById('gift').style.animation = 'none';
+
+            // 1. Cinematic 3D Lid Animation
+            const tlLid = gsap.timeline();
+            tlLid.to("#gift-lid-group", {
+                y: -150,           // Lift up
+                rotationX: 45,     // Tilt backwards
+                rotationY: 180,    // Spin around
+                rotationZ: 15,     // Slight skew
+                scale: 1.2,
+                opacity: 0,        // Fade out
+                duration: 1.5,
+                ease: "power2.inOut"
+            });
+
+            // 2. Trigger Canvas Confetti Explosion right as lid lifts
+            setTimeout(() => {
+                triggerConfetti();
+            }, 300);
+
+            // 3. Transition to Main Screen
+            setTimeout(() => {
+                const tlScreen = gsap.timeline();
+                
+                // Scale and fade out intro
+                tlScreen.to("#intro-screen", { 
+                    opacity: 0, 
+                    scale: 1.1,
+                    duration: 0.8, 
+                    ease: "power2.inOut",
+                    onComplete: () => {
+                        // Hide intro, show main content
+                        document.getElementById('intro-screen').style.display = 'none';
+                        const mainContent = document.getElementById('main-content');
+                        mainContent.classList.remove('hidden');
+                        document.getElementById('body-container').classList.remove('overflow-hidden');
+                        
+                        // Start balloons
+                        createBalloons();
+                        
+                        // Initialize Scroll Animations for Gallery
+                        initScrollAnimations();
+                    }
+                });
+
+                // Animate Header In
+                tlScreen.fromTo("#greeting-header", 
+                    { opacity: 0, y: 80, scale: 0.9 }, 
+                    { opacity: 1, y: 0, scale: 1, duration: 1.5, ease: "elastic.out(1, 0.75)" }
+                );
+
+            }, 1200);
+        }
+
+        // --- Confetti Logic ---
+        function triggerConfetti() {
+            const count = 350;
+            const defaults = {
+                origin: { y: 0.6 },
+                zIndex: 9999,
+                colors: ['#ffd700', '#ffb703', '#e63946', '#ffffff', '#0077b6']
+            };
+
+            function fire(particleRatio, opts) {
+                confetti(Object.assign({}, defaults, opts, {
+                    particleCount: Math.floor(count * particleRatio)
+                }));
+            }
+
+            // Big Explosion
+            fire(0.25, { spread: 26, startVelocity: 55 });
+            fire(0.2, { spread: 60 });
+            fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
+            fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
+            fire(0.1, { spread: 120, startVelocity: 45 });
+
+            // Gentle continuous rain for a few seconds
+            let end = Date.now() + (5 * 1000);
+            let colors = ['#ffd700', '#ffffff'];
+
+            (function frame() {
+                confetti({
+                    particleCount: 3,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 },
+                    colors: colors
+                });
+                confetti({
+                    particleCount: 3,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 },
+                    colors: colors
+                });
+
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            }());
+        }
+
+        // --- Balloons Logic ---
+        function createBalloons() {
+            const container = document.getElementById('balloons-container');
+            const balloonColors = ['#ffd700', '#e63946', '#00b4d8', '#ff9e00', '#9d4edd'];
+            
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const balloon = document.createElement('div');
+                    balloon.classList.add('balloon');
+                    
+                    // Random positions and colors
+                    balloon.style.left = Math.random() * 90 + 5 + '%';
+                    const color = balloonColors[Math.floor(Math.random() * balloonColors.length)];
+                    
+                    balloon.style.backgroundColor = color;
+                    balloon.style.boxShadow = `inset -10px -10px 15px rgba(0,0,0,0.3), 0 0 15px ${color}80`;
+                    
+                    // Set tail color via inline style injection for uniqueness
+                    const styleId = `balloon-style-${i}`;
+                    const style = document.createElement('style');
+                    style.innerHTML = `
+                        .balloon-tail-${i}::before { border-bottom-color: ${color} !important; }
+                    `;
+                    document.head.appendChild(style);
+                    balloon.classList.add(`balloon-tail-${i}`);
+
+                    // Randomize animation speed
+                    const duration = Math.random() * 8 + 10; // 10s to 18s
+                    balloon.style.animationDuration = duration + 's';
+                    
+                    container.appendChild(balloon);
+                }, i * 400); // Stagger creation
+            }
+        }
+
+        // --- ScrollTrigger Logic for Zigzag Gallery ---
+        function initScrollAnimations() {
+            const galleryItems = document.querySelectorAll('.gallery-item');
+            
+            galleryItems.forEach((item, index) => {
+                // Determine direction based on index (even/odd)
+                // In RTL: index 0 is Right, index 1 is Left
+                const isEven = index % 2 === 0;
+                const xOffset = isEven ? 100 : -100; // Slide from right for even, left for odd
+                
+                // Make item visible right before animating
+                gsap.set(item, { autoAlpha: 1 });
+
+                gsap.from(item, {
+                    scrollTrigger: {
+                        trigger: item,
+                        start: "top 85%", // Trigger when top of item hits 85% of viewport height
+                        toggleActions: "play none none reverse",
+                    },
+                    x: xOffset,
+                    opacity: 0,
+                    rotation: isEven ? -5 : 5,
+                    duration: 1,
+                    ease: "power3.out"
+                });
+            });
+        }
+    </script>
+</body>
+</html>
