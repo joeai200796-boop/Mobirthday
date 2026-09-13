@@ -30,11 +30,21 @@
             --ribbon-gold: #f4a261;
         }
 
+        html {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: hidden;
+            background: var(--bg-navy-dark);
+        }
+
         body {
             font-family: 'Noto Kufi Arabic', sans-serif;
-            background: linear-gradient(135deg, var(--bg-navy-dark), var(--bg-navy-light));
+            background: linear-gradient(135deg, var(--bg-navy-dark), var(--bg-navy-light)) fixed;
             color: white;
             overflow-x: hidden;
+            overscroll-behavior-x: none;
+            width: 100%;
+            max-width: 100%;
             min-height: 100vh;
             margin: 0;
             font-weight: 500;
@@ -229,6 +239,9 @@
         /* Zigzag Gallery Elements */
         .gallery-item {
             visibility: hidden; /* Hidden until ScrollTrigger activates */
+            min-width: 0;
+            max-width: 100%;
+            box-sizing: border-box;
         }
 
         .gallery-item:nth-child(odd) {
@@ -243,6 +256,8 @@
             border: 2px solid rgba(255, 215, 0, 0.3);
             border-radius: 16px;
             overflow: hidden;
+            max-width: 100%;
+            box-sizing: border-box;
             box-shadow: 0 20px 40px rgba(0,0,0,0.5);
             transition: transform 0.3s ease, border-color 0.3s ease;
             
@@ -268,7 +283,8 @@
         
         /* Footer Gradient */
         .footer-gradient {
-            background: linear-gradient(to top, var(--bg-navy-dark) 0%, transparent 100%);
+            background: linear-gradient(to top, var(--bg-navy-dark) 0%, var(--bg-navy-dark) 55%, rgba(7, 15, 32, 0.9) 100%);
+            width: 100%;
         }
     </style>
 </head>
@@ -328,6 +344,7 @@
 </h1>
             <p class="text-lg md:text-2xl text-gray-200 max-w-3xl mx-auto leading-loose font-bold text-clear-shadow bg-black/30 p-6 rounded-2xl backdrop-blur-sm border border-white/10">
                 نتمنى لك عاماً مليئاً بالصحة والنجاح والتوفيق الدائم.<br>شخصية قيادية نعتز ونفخر بها دائماً!
+                <br>بابا حبيبي كل سنة وانت سندي و ظهري في كل مشاريعي و حياتي و تفضل تشاركني كل حاجة بعملها ده هدية بسيطة مني بالحاجات اللي بعملها للناس كان لازم استغلها و اعمل ليك حاجة بسيطة كدا و أتمني تعجبك  ربنا يخليك لينا كلنا ♡
             </p>
         </div>
 
