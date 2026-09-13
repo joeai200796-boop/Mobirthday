@@ -230,6 +230,14 @@
         .gallery-item {
             visibility: hidden; /* Hidden until ScrollTrigger activates */
         }
+
+        .gallery-item:nth-child(odd) {
+            align-self: flex-start;
+        }
+
+        .gallery-item:nth-child(even) {
+            align-self: flex-end;
+        }
         
         .gallery-image-wrapper {
             border: 2px solid rgba(255, 215, 0, 0.3);
@@ -237,11 +245,25 @@
             overflow: hidden;
             box-shadow: 0 20px 40px rgba(0,0,0,0.5);
             transition: transform 0.3s ease, border-color 0.3s ease;
+            
+            /* هذا السطر يجبر البرواز على الانكماش ليناسب حجم الصورة بظبط */
+            width: fit-content;
+            height: fit-content;
+            background-color: transparent; /* إزالة لون الخلفية لمنع الفراغات */
         }
 
         .gallery-image-wrapper:hover {
             transform: scale(1.02);
             border-color: rgba(255, 215, 0, 0.8);
+        }
+
+        .gallery-image-wrapper img {
+            display: block;
+            /* السماح للصورة بالتحكم في الحجم بشكل طبيعي بدون فراغات */
+            width: auto;
+            max-width: 100%;
+            height: auto;
+            max-height: 80vh; 
         }
         
         /* Footer Gradient */
@@ -294,10 +316,16 @@
             <p class="text-2xl md:text-3xl text-yellow-300 mb-6 font-bold tracking-wider text-clear-shadow">
                 كل عام وأنت بألف خير
             </p>
-            <h1 class="text-4xl md:text-6xl lg:text-7xl font-black mb-8 leading-tight">
-                <span class="golden-text block pb-2">يا سيادة العميد</span>
-                <span class="golden-text text-5xl md:text-7xl lg:text-8xl block mt-2">محمد ابراهيم</span>
-            </h1>
+           <!-- استدعاء خط الرقعة المستخدم في الصورة -->
+<link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@700&display=swap" rel="stylesheet">
+
+<!-- العنوان على سطر واحد بنفس تأثير الصورة بظبط -->
+<h1 class="text-4xl md:text-5xl lg:text-6xl mb-8 flex flex-row flex-wrap justify-center items-center gap-3 md:gap-5 w-full dir-rtl" 
+    style="font-family: 'Aref Ruqaa', serif; font-weight: 700; color: #faff00; -webkit-text-fill-color: #faff00; -webkit-text-stroke: 0.35px #ffffb8; text-shadow: 0 0 2px #ffffff, 0 0 8px #fff700, 0 0 18px rgba(250, 255, 0, 0.9), 0 4px 8px rgba(0, 0, 0, 0.65); line-height: 1.5;">
+    <span>يا سيادة العميد</span>
+    <span style="color: #ffd700; text-shadow: none; -webkit-text-stroke: 0; font-family: 'Cairo', sans-serif;">/</span>
+    <span>محمد ابراهيم</span>
+</h1>
             <p class="text-lg md:text-2xl text-gray-200 max-w-3xl mx-auto leading-loose font-bold text-clear-shadow bg-black/30 p-6 rounded-2xl backdrop-blur-sm border border-white/10">
                 نتمنى لك عاماً مليئاً بالصحة والنجاح والتوفيق الدائم.<br>شخصية قيادية نعتز ونفخر بها دائماً!
             </p>
@@ -315,35 +343,60 @@
             <div class="flex flex-col gap-12 md:gap-24 pb-20">
                 
                 <!-- Image 1: Right aligned (RTL) -->
-                <div class="gallery-item w-full md:w-2/3 self-start">
-                    <div class="gallery-image-wrapper bg-gray-800 p-2 transform rotate-1 hover:rotate-0">
-                        <img src="https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=800&q=80" alt="ذكرى 1" class="w-full h-64 md:h-96 object-cover rounded-xl">
+                <div class="gallery-item w-11/12 md:w-2/3">
+                    <div class="gallery-image-wrapper bg-gray-800 transform rotate-1 hover:rotate-0">
+                        <img src="aw.jpeg" alt="ذكرى 1" class="w-full rounded-xl">
                     </div>
                 </div>
 
                 <!-- Image 2: Left aligned (RTL) -->
-                <div class="gallery-item w-full md:w-2/3 self-end">
-                    <div class="gallery-image-wrapper bg-gray-800 p-2 transform -rotate-1 hover:rotate-0">
-                        <img src="https://images.unsplash.com/photo-1530103862676-de8892795cfa?auto=format&fit=crop&w=800&q=80" alt="ذكرى 2" class="w-full h-64 md:h-96 object-cover rounded-xl">
+                <div class="gallery-item w-11/12 md:w-2/3">
+                    <div class="gallery-image-wrapper bg-gray-800 transform -rotate-1 hover:rotate-0">
+                        <img src="WhatsApp Image 2026-09-13 at 1.53.44 PM.jpeg">
                     </div>
                 </div>
 
                 <!-- Image 3: Right aligned (RTL) -->
-                <div class="gallery-item w-full md:w-2/3 self-start">
-                    <div class="gallery-image-wrapper bg-gray-800 p-2 transform rotate-2 hover:rotate-0">
-                        <img src="https://images.unsplash.com/photo-1464349153735-7db50ed83c84?auto=format&fit=crop&w=800&q=80" alt="ذكرى 3" class="w-full h-64 md:h-96 object-cover rounded-xl">
+                <div class="gallery-item w-11/12 md:w-2/3">
+                    <div class="gallery-image-wrapper bg-gray-800 transform rotate-2 hover:rotate-0">
+                        <img src="azx.jpeg" alt="ذكرى 3" class="w-full rounded-xl">
+                    </div>
+                </div>
+                <div class="gallery-item w-11/12 md:w-2/3">
+                    <div class="gallery-image-wrapper bg-gray-800 transform -rotate-1 hover:rotate-0">
+                        <img src="21$.jpeg">
                     </div>
                 </div>
 
-                <!-- Image 4: Left aligned (RTL) -->
-                <div class="gallery-item w-full md:w-2/3 self-end">
-                    <div class="gallery-image-wrapper bg-gray-800 p-2 transform -rotate-2 hover:rotate-0 text-center flex items-center justify-center h-64 md:h-96">
-                        <p class="text-2xl md:text-3xl text-yellow-400 font-bold p-6">
-                            مساحة لإضافة المزيد من الصور الرائعة لاحقاً... 📸
-                        </p>
+                <div class="gallery-item w-11/12 md:w-2/3">
+                    <div class="gallery-image-wrapper bg-gray-800 transform rotate-2 hover:rotate-0">
+                        <img src="qaz.jpeg" alt="ذكرى 3" class="w-full rounded-xl">
                     </div>
                 </div>
-                
+
+                <div class="gallery-item w-11/12 md:w-2/3">
+                    <div class="gallery-image-wrapper bg-gray-800 transform rotate-2 hover:rotate-0">
+                        <img src="WhatsApp Image 2026-09-13 at 2.15.29 PM.jpeg" alt="ذكرى 3" class="w-full rounded-xl">
+                    </div>
+                </div>
+
+                <div class="gallery-item w-11/12 md:w-2/3">
+                    <div class="gallery-image-wrapper bg-gray-800 transform rotate-2 hover:rotate-0">
+                        <img src="hoo.jpeg" alt="ذكرى 3" class="w-full rounded-xl">
+                    </div>
+                </div>
+
+                <div class="gallery-item w-11/12 md:w-2/3">
+                    <div class="gallery-image-wrapper bg-gray-800 transform rotate-2 hover:rotate-0">
+                        <img src="q.jpeg" alt="ذكرى 3" class="w-full rounded-xl">
+                    </div>
+                </div>
+
+                <div class="gallery-item w-11/12 md:w-2/3">
+                    <div class="gallery-image-wrapper bg-gray-800 transform rotate-2 hover:rotate-0">
+                        <img src="balto.jpeg" alt="ذكرى 3" class="w-full rounded-xl">
+                    </div>
+                </div>
             </div>
         </section>
 
